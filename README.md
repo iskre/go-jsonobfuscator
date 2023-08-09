@@ -6,6 +6,15 @@ A go library to obfuscate and encrypt json objects.
 > This lib is in active development and currently has no strong obfuscation
 > methods implemented.
 
+## Planned features
+
+- [ ] encrypted values
+- [ ] hashed keys
+- [ ] configuration
+  - [ ] enable and disable every feature
+  - [ ] hash type and strength
+  - [ ] secret for encryption
+
 ## Example
 
 ```go
