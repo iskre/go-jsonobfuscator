@@ -1,8 +1,6 @@
 package gojsonobfuscator
 
 import (
-	"encoding/json"
-	"fmt"
 	"reflect"
 	"testing"
 )
@@ -60,6 +58,28 @@ func TestObfuscate(t *testing.T) {
 	if key, null := nullCheck(obf); null {
 		t.Errorf("%q was null", key)
 	}
-	out, _ := json.MarshalIndent(obf, "", "\t")
-	fmt.Println(string(out))
+}
+
+func TestObfuscateEmptyStruct(t *testing.T) {
+	b := struct{}{}
+	obf, err := Obfuscate(b)
+	if err != nil {
+		t.Error(err)
+	}
+	if key, null := nullCheck(obf); null {
+		t.Errorf("%q was null", key)
+	}
+}
+
+func TestObfuscateEmptyValues(t *testing.T) {
+	b := struct{ Name interface{} }{
+		Name: nil,
+	}
+	obf, err := Obfuscate(b)
+	if err != nil {
+		t.Error(err)
+	}
+	if _, null := nullCheck(obf); !null {
+		t.Errorf("map not null, it should be")
+	}
 }

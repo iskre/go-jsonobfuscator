@@ -6,15 +6,6 @@ A go library to obfuscate and encrypt json objects.
 > This lib is in active development and currently has no strong obfuscation
 > methods implemented.
 
-## Planned features
-
-- [ ] encrypted values
-- [ ] hashed keys
-- [ ] configuration
-  - [ ] enable and disable every feature
-  - [ ] hash type and strength
-  - [ ] secret for encryption
-
 ## Example
 
 ```go
@@ -22,6 +13,8 @@ package main
 
 import (
     gobf "github.com/iskre/go-jsonobfuscator"
+	"encoding/json"
+	"fmt"
 )
 
 type A struct {
@@ -33,21 +26,23 @@ type F struct {
     B A
     A A
 }
-f := F{
-    B: A{
-        Name:  "test",
-        Age:   15,
-        Money: 24.5,
-    },
-    A: A{
-        Name:  "test",
-        Age:   89_120,
-        Money: 12.5,
-    },
+func main() {
+    f := F{
+        B: A{
+            Name:  "test",
+            Age:   15,
+            Money: 24.5,
+        },
+        A: A{
+            Name:  "test",
+            Age:   89_120,
+            Money: 12.5,
+        },
+    }
+    obf, _ := gobf.Obfuscate(f)
+    jsonOutput, _ := json.MarshalIndent(obf, "", "\t")
+    fmt.Println(string(jsonOutput))
 }
-obf, _ := gobf.Obfuscate(f)
-jsonOutput, _ := json.MarshalIndent(obf, "", "\t")
-fmt.Println(string(jsonOutput))
 ```
 
 Results in:
@@ -67,6 +62,52 @@ Results in:
 }
 ```
 
-## Methodic
+## Documentation
 
-- gobf replaces the given go struct keys with obfuscated representations of their values
+## Configuration
+
+`gobf`'s configuration enables fine grained control over the resulting
+structure.
+
+The default configuration can be overridden via the `gobf.SetConfig()`-Method,
+that accepts a `gobf.Config`-Structure.
+
+### Default configuration
+
+```go
+Config{
+	HashKeys:      false,
+	EncryptValues: false,
+	Ints:          true,
+	Floats:        true,
+	Strings:       true,
+	Secret:        "",
+}
+```
+
+## Features
+
+### Key hashing
+
+Enabling `Config.HashKeys` hashes structure keys with `Config.Secret`
+
+### Value encryption
+
+Enabling `Config.EncryptValues` encrypts structure values with `Config.Secret`
+
+### Value Obfuscation
+
+Value obfuscation is used to describe the process of replacing the values of
+the given go struct with obfuscated representations of the original values.
+
+#### Strings
+
+Enabling `Config.Strings` obfuscates structure values of type `string`
+
+#### Integers
+
+Enabling `Config.Ints` obfuscates structure values of type `int`, `int8`, `int16`, `int32`, `int64`
+
+#### Floats
+
+Enabling `Config.Ints` obfuscates structure values of type `float32`, `float64`

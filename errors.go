@@ -1,25 +1,25 @@
 package gojsonobfuscator
 
-type ObfuscationError struct {
+type obfuscationError struct {
 	txt string
 }
 
-type DeObfuscationError struct {
+type deObfuscationError struct {
 	txt string
 }
 
-func (o *ObfuscationError) Error() string {
+func (o *obfuscationError) Error() string {
 	return o.txt
 }
 
-func (d *DeObfuscationError) Error() string {
+func (d *deObfuscationError) Error() string {
 	return d.txt
 }
 
-func NewObfuscationError(txt string) *ObfuscationError {
-	return &ObfuscationError{txt}
+func newObfuscationError(txt string) *obfuscationError {
+	return &obfuscationError{txt}
 }
 
-func NewDeObfuscationError(txt string) *DeObfuscationError {
-	return &DeObfuscationError{txt}
+func newDeObfuscationError(txt string) *deObfuscationError {
+	return &deObfuscationError{txt}
 }
