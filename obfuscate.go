@@ -1,12 +1,31 @@
 package gojsonobfuscator
 
 import (
+	"fmt"
 	"reflect"
 )
 
 var depth = 1
 
+// defines how deep the obfuscator will move in a struct
 const maxdepth = 256
+
+// returns the obfuscated given atomic value `a`
+func obfuscateAtomic(a any) any {
+	var r any
+	r = a
+	switch a.(type) {
+	case float32, float64:
+		r = fmt.Sprintf("%0x", a)
+	case int, int8, int16, int32, int64:
+		r = fmt.Sprintf("%0x", a)
+	case string:
+		r = []byte(a.(string))
+	default:
+		return a
+	}
+	return r
+}
 
 func Obfuscate(obj interface{}) (map[string]interface{}, error) {
 	r := make(map[string]interface{}, 0)
@@ -76,7 +95,7 @@ func Obfuscate(obj interface{}) (map[string]interface{}, error) {
 			}
 			val = t
 		}
-		r[fieldName] = val
+		r[fieldName] = obfuscateAtomic(val)
 	}
 	return r, nil
 }
