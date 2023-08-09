@@ -1,0 +1,10 @@
+go-obfuscator
+=============
+
+A go library to obfuscate and encrypt json objects.
+
+Methodic
+--------
+
+- gobf replaces the given go struct keys with obfuscated representations of their values
+
